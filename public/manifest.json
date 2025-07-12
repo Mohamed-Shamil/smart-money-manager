@@ -1,0 +1,21 @@
+{
+  "name": "Smart Money Manager",
+  "short_name": "Money Manager",
+  "description": "Track expenses, set budgets, and get AI-powered financial advice",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1AA975",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "lang": "en",
+  "dir": "ltr"
+} 
