@@ -43,15 +43,7 @@ export default function Settings() {
     alert("Budget saved successfully!");
   };
 
-  const handleSaveSettings = () => {
-    updateSettings({
-      uid: 'default',
-      darkMode: false, // This is handled by next-themes
-      dailyReminder: settingsData.dailyReminder,
-      spendingLimit: settingsData.spendingLimit
-    });
-    alert("Settings saved successfully!");
-  };
+  // Settings are automatically saved when changed
 
   const handleClearData = () => {
     if (confirm("Are you sure you want to clear all data? This action cannot be undone.")) {

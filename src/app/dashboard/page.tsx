@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { CATEGORIES, CATEGORY_COLORS } from "@/lib/types";
+import { CATEGORY_COLORS } from "@/lib/types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from "recharts";
 
 export default function Dashboard() {

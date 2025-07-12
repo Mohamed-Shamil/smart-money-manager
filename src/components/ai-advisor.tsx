@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, TrendingUp, Target, AlertTriangle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { CATEGORIES } from "@/lib/types";
+// Categories are used internally by the AI advisor
 
 interface AIAdvice {
   tips: string[];
