@@ -16,7 +16,7 @@ import { CATEGORIES } from "@/lib/types";
 
 export default function Settings() {
   const router = useRouter();
-  const { budgets, addBudget, updateBudget, settings, updateSettings, expenses, deleteExpense } = useAppStore();
+  const { budgets, addBudget, updateBudget, settings, expenses, deleteExpense } = useAppStore();
   const currentMonth = getCurrentMonth();
   const currentBudget = budgets.find(b => b.month === currentMonth);
   
