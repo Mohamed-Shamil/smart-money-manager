@@ -141,7 +141,8 @@ export function FinancialCalculators() {
       income,
       deductions,
       taxBracket: taxBracket.bracket,
-      estimatedTax
+      estimatedTax,
+      createdAt: new Date()
     });
 
     toast.success(`Estimated tax: ${formatCurrency(estimatedTax)} (${taxBracket.bracket} bracket)`);

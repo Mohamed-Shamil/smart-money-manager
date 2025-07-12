@@ -10,13 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Target, TrendingUp, Calendar, DollarSign } from "lucide-react";
+import { Plus, Target } from "lucide-react";
 import { formatCurrency, formatDate, getDaysBetween } from "@/lib/utils";
 import { SavingsGoal, CATEGORIES } from "@/lib/types";
 import { toast } from "sonner";
 
 export function SavingsGoals() {
-  const { savingsGoals, addSavingsGoal, updateSavingsGoal, deleteSavingsGoal } = useAppStore();
+  const { savingsGoals, addSavingsGoal, updateSavingsGoal } = useAppStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -39,7 +39,8 @@ export function SavingsGoals() {
       targetAmount: parseFloat(formData.targetAmount),
       currentAmount: parseFloat(formData.currentAmount) || 0,
       deadline: formData.deadline,
-      category: formData.category || "Savings"
+      category: formData.category || "Savings",
+      createdAt: new Date()
     };
 
     addSavingsGoal(goal);
@@ -65,17 +66,6 @@ export function SavingsGoals() {
     const deadlineDate = new Date(deadline);
     const today = new Date();
     return getDaysBetween(today, deadlineDate);
-  };
-
-  const getStatusColor = (goal: SavingsGoal) => {
-    const progress = getProgressPercentage(goal);
-    const daysRemaining = getDaysRemaining(goal.deadline);
-    
-    if (progress >= 100) return "bg-green-500";
-    if (daysRemaining < 0) return "bg-red-500";
-    if (progress >= 75) return "bg-blue-500";
-    if (progress >= 50) return "bg-yellow-500";
-    return "bg-gray-500";
   };
 
   return (

@@ -15,7 +15,7 @@ import { Debt } from "@/lib/types";
 import { toast } from "sonner";
 
 export function DebtTracker() {
-  const { debts, addDebt, updateDebt, deleteDebt } = useAppStore();
+  const { debts, addDebt, updateDebt } = useAppStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -41,7 +41,8 @@ export function DebtTracker() {
       interestRate: formData.interestRate ? parseFloat(formData.interestRate) : undefined,
       dueDate: formData.dueDate || undefined,
       description: formData.description,
-      status: "active" as const
+      status: "active" as const,
+      createdAt: new Date()
     };
 
     addDebt(debt);
@@ -182,7 +183,7 @@ export function DebtTracker() {
             <p className="text-lg font-bold text-red-500">{formatCurrency(getTotalOwed())}</p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-muted-foreground">You're Owed</p>
+            <p className="text-sm text-muted-foreground">You are Owed</p>
             <p className="text-lg font-bold text-green-500">{formatCurrency(getTotalGiven())}</p>
           </div>
           <div className="text-center">
@@ -191,7 +192,7 @@ export function DebtTracker() {
               {formatCurrency(Math.abs(getNetDebt()))}
             </p>
             <p className="text-xs text-muted-foreground">
-              {getNetDebt() >= 0 ? 'You owe more' : 'You\'re owed more'}
+              {getNetDebt() >= 0 ? "You owe more" : "You are owed more"}
             </p>
           </div>
         </div>
@@ -213,7 +214,7 @@ export function DebtTracker() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={debt.type === "owed" ? "destructive" : "default"}>
-                      {debt.type === "owed" ? "You Owe" : "You're Owed"}
+                      {debt.type === "owed" ? "You Owe" : "You are Owed"}
                     </Badge>
                     <div className="flex items-center gap-1">
                       {getStatusIcon(debt)}

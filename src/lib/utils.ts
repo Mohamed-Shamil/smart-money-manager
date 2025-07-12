@@ -155,3 +155,46 @@ export const isThisMonth = (date: string | Date): boolean => {
   return dateObj.getMonth() === today.getMonth() && 
          dateObj.getFullYear() === today.getFullYear();
 };
+
+export function calculateEmergencyFund(monthlyExpenses: number, months: number = 6): number {
+  return monthlyExpenses * months;
+}
+
+export function calculateRetirement(
+  currentAge: number,
+  retirementAge: number,
+  currentSavings: number,
+  monthlyContribution: number,
+  expectedReturn: number
+): number {
+  const yearsToRetirement = retirementAge - currentAge;
+  const monthlyRate = expectedReturn / 100 / 12;
+  const totalMonths = yearsToRetirement * 12;
+  const futureValue = currentSavings * Math.pow(1 + expectedReturn / 100, yearsToRetirement) +
+    monthlyContribution * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+  return Math.round(futureValue);
+}
+
+export function calculateTaxBracket(income: number): { bracket: string; rate: number } {
+  // Simplified US tax brackets for 2024
+  if (income <= 11600) return { bracket: '10%', rate: 0.10 };
+  if (income <= 47150) return { bracket: '12%', rate: 0.12 };
+  if (income <= 100525) return { bracket: '22%', rate: 0.22 };
+  if (income <= 191950) return { bracket: '24%', rate: 0.24 };
+  if (income <= 243725) return { bracket: '32%', rate: 0.32 };
+  if (income <= 609350) return { bracket: '35%', rate: 0.35 };
+  return { bracket: '37%', rate: 0.37 };
+}
+
+export function calculateDebtPayoff(principal: number, interestRate: number, monthlyPayment: number): { months: number; totalInterest: number } {
+  const monthlyRate = interestRate / 100 / 12;
+  if (monthlyPayment <= principal * monthlyRate) {
+    return { months: Infinity, totalInterest: Infinity };
+  }
+  const months = Math.log(monthlyPayment / (monthlyPayment - principal * monthlyRate)) / Math.log(1 + monthlyRate);
+  const totalInterest = (monthlyPayment * months) - principal;
+  return {
+    months: Math.ceil(months),
+    totalInterest: Math.round(totalInterest)
+  };
+}
