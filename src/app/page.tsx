@@ -4,6 +4,10 @@ import { useAppStore, getCurrentMonth, getExpensesByMonth } from "@/lib/store";
 import { Navigation } from "@/components/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AIAdvisor } from "@/components/ai-advisor";
+import { SavingsGoals } from "@/components/savings-goals";
+import { DebtTracker } from "@/components/debt-tracker";
+import { FinancialCalculators } from "@/components/financial-calculators";
+import { CircularProgress } from "@/components/circular-progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -49,14 +53,27 @@ export default function Home() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Budget Remaining</CardTitle>
+              <CardTitle className="text-sm font-medium">Budget Progress</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(budgetRemaining)}</div>
-              <p className="text-xs text-muted-foreground">
-                {currentBudget ? `of ${formatCurrency(currentBudget.totalBudget)}` : 'No budget set'}
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-bold">{formatCurrency(budgetRemaining)}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {currentBudget ? `of ${formatCurrency(currentBudget.totalBudget)}` : 'No budget set'}
+                  </p>
+                </div>
+                {currentBudget && (
+                  <CircularProgress
+                    value={totalSpent}
+                    maxValue={currentBudget.totalBudget}
+                    size={50}
+                    strokeWidth={4}
+                    className="text-blue-500"
+                  />
+                )}
+              </div>
             </CardContent>
           </Card>
 
@@ -107,6 +124,15 @@ export default function Home() {
 
         {/* AI Advisor */}
         <AIAdvisor />
+
+        {/* Savings Goals */}
+        <SavingsGoals />
+
+        {/* Debt Tracker */}
+        <DebtTracker />
+
+        {/* Financial Calculators */}
+        <FinancialCalculators />
 
         {/* Recent Transactions */}
         <Card>

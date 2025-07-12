@@ -12,7 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save } from "lucide-react";
-import { CATEGORIES } from "@/lib/types";
+import { CATEGORIES, CURRENCIES } from "@/lib/types";
+import { toast } from "sonner";
 
 export default function AddExpense() {
   const router = useRouter();
@@ -21,14 +22,18 @@ export default function AddExpense() {
     amount: "",
     category: "",
     note: "",
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    currency: "USD",
+    businessName: "",
+    isRecurring: false,
+    recurringType: "monthly" as "daily" | "weekly" | "monthly" | "yearly"
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.amount || !formData.category) {
-      alert("Please fill in all required fields");
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -37,10 +42,15 @@ export default function AddExpense() {
       amount: parseFloat(formData.amount),
       category: formData.category,
       note: formData.note,
-      date: formData.date
+      date: formData.date,
+      currency: formData.currency,
+      businessName: formData.businessName || undefined,
+      isRecurring: formData.isRecurring,
+      recurringType: formData.recurringType
     };
 
     addExpense(expense);
+    toast.success("Expense added successfully!");
     router.push('/');
   };
 
@@ -70,36 +80,67 @@ export default function AddExpense() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount *</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="amount">Amount *</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="currency">Currency</Label>
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(CURRENCIES).map(([code, info]) => (
+                        <SelectItem key={code} value={code}>
+                          {code} ({info.symbol})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="category">Category *</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessName">Business Name</Label>
+                  <Input
+                    id="businessName"
+                    placeholder="e.g., My Company LLC"
+                    value={formData.businessName}
+                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -120,6 +161,45 @@ export default function AddExpense() {
                   value={formData.note}
                   onChange={(e) => setFormData({ ...formData, note: e.target.value })}
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="isRecurring">Recurring Expense</Label>
+                  <Select
+                    value={formData.isRecurring ? "yes" : "no"}
+                    onValueChange={(value) => setFormData({ ...formData, isRecurring: value === "yes" })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="no">No</SelectItem>
+                      <SelectItem value="yes">Yes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {formData.isRecurring && (
+                  <div className="space-y-2">
+                    <Label htmlFor="recurringType">Recurring Type</Label>
+                    <Select
+                      value={formData.recurringType}
+                      onValueChange={(value: "daily" | "weekly" | "monthly" | "yearly") => 
+                        setFormData({ ...formData, recurringType: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="yearly">Yearly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               <Button type="submit" className="w-full" size="lg">
